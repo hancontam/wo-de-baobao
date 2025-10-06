@@ -25,16 +25,27 @@ function App() {
     if (containerRef.current && !fireworksRef.current) {
       // 初始化烟花效果
       fireworksRef.current = new Fireworks(containerRef.current, {
-        hue: { min: 0, max: 360 },
-        delay: { min: 15, max: 30 },
+        hue: { min: 0, max: 345 },
+        delay: { min: 30, max: 35 },
         rocketsPoint: { min: 50, max: 50 },
-        opacity: 0.9,
-        acceleration: 1.05,
+        opacity: 0.5,
+        acceleration: 1.02,
         friction: 0.97,
         gravity: 1.5,
-        particles: 150,
+        particles: 60,
         trace: 3,
-        explosion: 10,
+        explosion: 5,
+        brightness: { min: 50, max: 80 },
+        decay: { min: 0.015, max: 0.03 },
+        flickering: 50,
+        intensity: 30,
+        traceLength: 3,
+        traceSpeed: 10,
+        lineWidth: {
+          explosion: { min: 1, max: 4 },
+          trace: { min: 0.1, max: 1 }
+        },
+        lineStyle: 'round',
         boundaries: {
           x: 0,
           y: 0,
