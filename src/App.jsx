@@ -43,9 +43,9 @@ function App() {
         traceSpeed: 10,
         lineWidth: {
           explosion: { min: 1, max: 4 },
-          trace: { min: 0.1, max: 1 }
+          trace: { min: 0.1, max: 1 },
         },
-        lineStyle: 'round',
+        lineStyle: "round",
         boundaries: {
           x: 0,
           y: 0,
