@@ -6,7 +6,7 @@ function App() {
   const containerRef = useRef(null);
   const audioRef = useRef(null);
   const fireworksRef = useRef(null);
-  const [currentLyric, setCurrentLyric] = useState("");
+  const [displayedLyric, setDisplayedLyric] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
 
   // 歌词时间轴 (时间以秒为单位)
@@ -21,32 +21,36 @@ function App() {
     { time: 9, text: "无论在哪" },
   ];
 
-  useEffect(() => {
-    if (containerRef.current) {
+  const initFireworks = () => {
+    if (containerRef.current && !fireworksRef.current) {
       // 初始化烟花效果
       fireworksRef.current = new Fireworks(containerRef.current, {
         hue: { min: 0, max: 360 },
-        delay: { min: 30, max: 60 },
+        delay: { min: 15, max: 30 },
         rocketsPoint: { min: 50, max: 50 },
-        opacity: 0.5,
+        opacity: 0.9,
         acceleration: 1.05,
         friction: 0.97,
         gravity: 1.5,
-        particles: 90,
+        particles: 150,
         trace: 3,
-        explosion: 6,
+        explosion: 10,
         boundaries: {
-          x: 50,
-          y: 50,
-          width: containerRef.current.clientWidth,
-          height: containerRef.current.clientHeight,
+          x: 0,
+          y: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
         },
       });
+      console.log("Fireworks initialized!"); // Debug log
     }
+  };
 
+  useEffect(() => {
     return () => {
       if (fireworksRef.current) {
         fireworksRef.current.stop();
+        fireworksRef.current = null;
       }
     };
   }, []);
@@ -57,9 +61,11 @@ function App() {
       audioRef.current.play();
       setIsPlaying(true);
 
-      // 开始烟花效果
+      // 初始化并开始烟花效果
+      initFireworks();
       if (fireworksRef.current) {
         fireworksRef.current.start();
+        console.log("Fireworks started!"); // Debug log
       }
 
       // 开始歌词显示
@@ -69,7 +75,7 @@ function App() {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       setIsPlaying(false);
-      setCurrentLyric("");
+      setDisplayedLyric("");
 
       // 停止烟花效果
       if (fireworksRef.current) {
@@ -78,23 +84,36 @@ function App() {
     }
   };
 
+  const typewriterEffect = (text, callback) => {
+    setDisplayedLyric("");
+    let index = 0;
+    const timer = setInterval(() => {
+      setDisplayedLyric(text.slice(0, index + 1));
+      index++;
+      if (index >= text.length) {
+        clearInterval(timer);
+        if (callback) callback();
+      }
+    }, 150);
+  };
+
   const startLyrics = () => {
     lyrics.forEach((lyric) => {
       setTimeout(() => {
-        setCurrentLyric(lyric.text);
+        typewriterEffect(lyric.text);
       }, lyric.time * 1000);
     });
 
     // 在最后一句歌词后清空
     const lastLyric = lyrics[lyrics.length - 1];
     setTimeout(() => {
-      setCurrentLyric("");
+      setDisplayedLyric("");
     }, (lastLyric.time + 3) * 1000);
   };
 
   const handleAudioEnd = () => {
     setIsPlaying(false);
-    setCurrentLyric("");
+    setDisplayedLyric("");
     if (fireworksRef.current) {
       fireworksRef.current.stop();
     }
@@ -102,14 +121,27 @@ function App() {
 
   return (
     <div className="app">
-      <div ref={containerRef} className="fireworks-container" />
+      <div ref={containerRef} className="fireworks-container">
+        <canvas
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+          }}
+        />
+      </div>
 
       <div className="content">
-        <button className="main-button" onClick={handleButtonClick}>
-          {isPlaying ? "停止" : "点这里吧，宝宝"}
-        </button>
+        {!isPlaying && (
+          <button className="main-button" onClick={handleButtonClick}>
+            中秋节快乐，丽丽！🎉
+          </button>
+        )}
 
-        {currentLyric && <div className="lyrics">{currentLyric}</div>}
+        {displayedLyric && <span className="lyrics">{displayedLyric}</span>}
       </div>
 
       <audio ref={audioRef} src="/sound.mp3" onEnded={handleAudioEnd} />

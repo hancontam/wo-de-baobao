@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -5,9 +7,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Noto Serif SC", "思源宋体", "宋体", serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
@@ -17,7 +17,7 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,9 +27,11 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 .content {
@@ -43,69 +45,118 @@ body {
 }
 
 .main-button {
-  background: linear-gradient(45deg, #ff6b6b, #feca57);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
-  border-radius: 50px;
-  padding: 20px 40px;
-  font-size: 24px;
-  font-weight: bold;
+  border-radius: 60px;
+  padding: 25px 50px;
+  font-size: 28px;
+  font-weight: 900;
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  min-width: 250px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4),
+    0 5px 15px rgba(0, 0, 0, 0.12);
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  min-width: 300px;
+  position: relative;
+  overflow: hidden;
+  font-family: "Noto Serif SC", "思源宋体", serif;
+  letter-spacing: 2px;
+}
+
+.main-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.6s;
+}
+
+.main-button:hover::before {
+  left: 100%;
 }
 
 .main-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
-  background: linear-gradient(45deg, #ff5252, #ffb347);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 20px 45px rgba(102, 126, 234, 0.5),
+    0 10px 25px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
 }
 
 .main-button:active {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4),
+    0 5px 15px rgba(0, 0, 0, 0.12);
 }
 
 .lyrics {
-  background: rgba(0, 0, 0, 0.7);
   color: #ffffff;
-  padding: 20px 30px;
-  border-radius: 25px;
-  font-size: 28px;
-  font-weight: bold;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  animation: lyricFadeIn 0.5s ease-in-out;
-  min-width: 300px;
+  font-size: 48px;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 40px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.4);
+  animation: lyricGlow 0.6s ease-in-out;
   text-align: center;
+  font-family: "Noto Serif SC", "思源宋体", serif;
+  letter-spacing: 4px;
+  line-height: 1.2;
+  background: linear-gradient(45deg, #ffd700, #ffeb3b, #fff176);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
 }
 
-@keyframes lyricFadeIn {
+@keyframes lyricGlow {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.9);
+    transform: translateY(30px) scale(0.8);
+    filter: blur(5px);
   }
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Hiệu ứng typewriter cursor */
+.lyrics::after {
+  content: "|";
+  animation: blink 1s infinite;
+  color: #ffd700;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
   }
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
   .main-button {
-    font-size: 20px;
-    padding: 15px 30px;
-    min-width: 200px;
+    font-size: 24px;
+    padding: 20px 35px;
+    min-width: 250px;
   }
 
   .lyrics {
-    font-size: 22px;
-    padding: 15px 25px;
-    min-width: 250px;
+    font-size: 36px;
+    letter-spacing: 3px;
   }
 
   .content {
@@ -115,15 +166,14 @@ body {
 
 @media (max-width: 480px) {
   .main-button {
-    font-size: 18px;
-    padding: 12px 25px;
-    min-width: 180px;
+    font-size: 20px;
+    padding: 18px 30px;
+    min-width: 220px;
   }
 
   .lyrics {
-    font-size: 18px;
-    padding: 12px 20px;
-    min-width: 200px;
+    font-size: 28px;
+    letter-spacing: 2px;
   }
 
   .content {
